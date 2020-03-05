@@ -133,4 +133,24 @@ class ProjectControllerTest extends WebTestCase
         $this->assertEquals(400, $client->getResponse()->getStatusCode());
         $this->assertStringContainsString("Name already exists in database", $client->getResponse()->getContent());
     }
+
+    /**
+     * Remove one project
+     */
+    function testRemoveProject(){
+        $client = static::createClient();
+        $client->request('GET', '/api/project/remove/1');
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->assertStringContainsString("Removed successfully", $client->getResponse()->getContent());
+    }
+
+    /**
+     * Remove one project with bad Id
+     */
+    function testRemoveProjectWithBadId(){
+        $client = static::createClient();
+        $client->request('GET', '/api/project/remove/2');
+        $this->assertEquals(500, $client->getResponse()->getStatusCode());
+        $this->assertStringContainsString("Error: No object to remove in database", $client->getResponse()->getContent());
+    }
 }

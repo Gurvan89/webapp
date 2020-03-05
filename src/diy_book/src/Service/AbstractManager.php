@@ -24,7 +24,12 @@ abstract class AbstractManager
     /**
      * Message thrown when an error is triggered during remove object
      */
-    const ERROR_REMOVE = "Unable to insert object";
+    const ERROR_REMOVE = "Unable to remove object";
+
+    /**
+     * Message thrown when an error is triggered during remove object
+     */
+    const NO_OBJECT_TO_REMOVE = "No object to remove in database";
 
     /**
      * @var EntityManagerInterface
@@ -92,10 +97,14 @@ abstract class AbstractManager
 
     /**
      * To remove an object
-     * @param object $obj
+     * @param int $id
      */
-    function remove(object $obj): void
+    function removeById(int $id): void
     {
+        $obj=$this->repo->find($id);
+        if (is_null($obj))
+            throw new Exception(self::NO_OBJECT_TO_REMOVE);
+
         try {
             $this->em->remove($obj);
             $this->em->flush();
@@ -105,6 +114,5 @@ abstract class AbstractManager
             throw new Exception(self::ERROR_REMOVE);
         }
     }
-
 
 }

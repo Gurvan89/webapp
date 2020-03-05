@@ -1,3 +1,3 @@
 #!/bin/bash
 
-sudo docker build -t vreminder:v1 .
+sudo docker build -t diy_book:v1 .

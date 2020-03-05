@@ -23,6 +23,8 @@ class ProjectController extends AbstractController
     const JSON_CONTENT = "json";
 
     /**
+     * To get all projects
+     * @example You can find an example with postman (getAllProjects). Download postman config in directory /Postman
      * @Route("/all" , methods={"GET"})
      * @param ProjectManager $manager
      * @return JsonResponse
@@ -39,6 +41,10 @@ class ProjectController extends AbstractController
     }
 
     /**
+     * To create or update project. This api has to contain a project in json format.
+     * If you add an id in json and if this id exists in database,
+     * the corresponding project will be update with the new values.
+     * @example You can find an example with postman (insertProject). Download postman config in directory /Postman
      * @Route("/edit" , methods={"POST"})
      * @param ProjectManager $manager
      * @param Request $request
@@ -55,5 +61,23 @@ class ProjectController extends AbstractController
             return $this->json($e->getMessage(), $e->getCode());
         }
         return $this->json($result, $result === "Created" ? Response::HTTP_CREATED : Response::HTTP_ACCEPTED);
+    }
+
+    /**
+     * To remove a project with Id
+     * @param ProjectManager $manager
+     * @param int $id
+     * @return JsonResponse
+     * @example You can find an example with postman (removeProject). Download postman config in directory /Postman
+     * @Route("/remove/{id}" , methods={"Get"})
+     */
+    public function removeAction(ProjectManager $manager, int $id)
+    {
+        try {
+            $manager->removeById($id);
+        } catch (Exception $e) {
+            return $this->json(sprintf("Error: %s",$e->getMessage()), Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+        return $this->json("Removed successfully", Response::HTTP_OK);
     }
 }
