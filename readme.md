@@ -16,3 +16,6 @@ Follow readme in each corresponding directory.
 ## Once all dependencies are running
 When everything is ready, you can run **setup_app.sh (diy_book/setup_app.sh**) in docker to create and update database.
 You have to execute this script in docker web_app because you need to be in configured environment.
+
+## Postman
+You can import postman config in your own postman to have some examples of these APIs
