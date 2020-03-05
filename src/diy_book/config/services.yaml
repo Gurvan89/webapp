@@ -22,6 +22,9 @@ services:
     App\Controller\:
         resource: '../src/Controller'
         tags: ['controller.service_arguments']
+    App\Service\ProjectManager:
+        # this is not a string, but a reference to a service called 'logger'
+        arguments: ['@doctrine.orm.entity_manager','@logger']
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
