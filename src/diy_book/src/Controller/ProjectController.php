@@ -52,7 +52,7 @@ class ProjectController extends AbstractController
         try {
             $result = $manager->insertOrUpdate(json_decode($request->getContent()));
         } catch (Exception $e) {
-            return $this->json($e->getMessage(), Response::HTTP_BAD_REQUEST);
+            return $this->json($e->getMessage(), $e->getCode());
         }
         return $this->json($result, $result === "Created" ? Response::HTTP_CREATED : Response::HTTP_ACCEPTED);
     }
