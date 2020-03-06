@@ -4,17 +4,19 @@
 namespace App\Service;
 
 
+use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ObjectRepository;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Config\Definition\Exception\Exception;
+use Symfony\Component\HttpFoundation\Response;
 
 abstract class AbstractManager
 {
     /**
      * Message thrown when an error is triggered during insert or update
      */
-    const ERROR_INSERT_UPDATE = "Unable to insert object";
+    const ERROR_INSERT_UPDATE = "Unable to insert or update object";
 
     /**
      * Message thrown when an error is triggered during get all objects
@@ -67,7 +69,7 @@ abstract class AbstractManager
     {
         try {
             return $this->repo->findAll();
-        } catch (Exception $exception) {
+        } catch (DBALException $exception) {
             $this->logger->error($exception);
             throw new Exception(self::ERROR_GET_ALL);
         }
@@ -88,9 +90,9 @@ abstract class AbstractManager
             $this->em->persist($obj);
             $this->em->flush();
             $this->em->clear();
-        } catch (Exception $exception) {
+        } catch (DBALException $exception) {
             $this->logger->error($exception);
-            throw new Exception(self::ERROR_INSERT_UPDATE);
+            throw new Exception(self::ERROR_INSERT_UPDATE,Response::HTTP_INTERNAL_SERVER_ERROR);
         }
         return $return;
     }
@@ -103,15 +105,15 @@ abstract class AbstractManager
     {
         $obj=$this->repo->find($id);
         if (is_null($obj))
-            throw new Exception(self::NO_OBJECT_TO_REMOVE);
+            throw new Exception(self::NO_OBJECT_TO_REMOVE,Response::HTTP_BAD_REQUEST);
 
         try {
             $this->em->remove($obj);
             $this->em->flush();
             $this->em->clear();
-        } catch (Exception $exception) {
+        } catch (DBALException $exception) {
             $this->logger->error($exception);
-            throw new Exception(self::ERROR_REMOVE);
+            throw new Exception(self::ERROR_REMOVE,Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 

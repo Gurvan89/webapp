@@ -6,12 +6,13 @@ use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\MappedSuperclass;
 use Exception;
+use JsonSerializable;
 
 /**
  * Class AbstractEntity
  * @MappedSuperclass
  */
-abstract class AbstractEntity
+abstract class AbstractEntity implements JsonSerializable
 {
     /**
      * @ORM\Id

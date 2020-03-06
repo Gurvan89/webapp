@@ -6,13 +6,12 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\PersistentCollection;
 use Exception;
-use JsonSerializable;
 
 /**
  * Class AbstractProject
  * @Entity(repositoryClass="App\Repository\ProjectRepository")
  */
-class Project extends AbstractEntity implements JsonSerializable
+class Project extends AbstractEntity
 {
     /**
      * 3  project's types existing
@@ -53,7 +52,6 @@ class Project extends AbstractEntity implements JsonSerializable
 
     /**
      * @ORM\OneToMany(targetEntity="Equipment", mappedBy="project")
-     * @ORM\JoinColumn(name="equipment_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
      * @var PersistentCollection
      */
     private PersistentCollection $equipments;
@@ -65,6 +63,15 @@ class Project extends AbstractEntity implements JsonSerializable
     public function __construct()
     {
         parent::__construct();
+    }
+
+    /**
+     * add new equipment
+     * @param Equipment $equipment
+     */
+    public function addEquipment(Equipment $equipment){
+        $equipment->setProject($this);
+        $this->equipments->add($equipment);
     }
 
     /**
@@ -159,7 +166,7 @@ class Project extends AbstractEntity implements JsonSerializable
             "name"=>$this->name,
             "type"=>$this->type,
             "estimatedDuration"=>$this->estimatedDuration,
-            "equipments"=>$this->equipments,
+            "equipments"=>$this->equipments->toArray(),
             "description"=>$this->description
         ];
     }

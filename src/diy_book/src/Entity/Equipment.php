@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\Entity;
+use Doctrine\ORM\Mapping\JoinColumn;
 
 /**
  * Class Equipment
@@ -30,7 +31,8 @@ class Equipment extends AbstractEntity
     private string $color;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Project", inversedBy="equipments")
+     * @ORM\ManyToOne(targetEntity="Project", inversedBy="equipments",cascade={"persist"})
+     * @JoinColumn(name="project_id", referencedColumnName="id")
      * @var Project
      */
     private Project $project;
@@ -99,4 +101,15 @@ class Equipment extends AbstractEntity
         $this->project = $project;
     }
 
+    /**
+     * @inheritDoc
+     */
+    public function jsonSerialize()
+    {
+        return [
+            "type"=>$this->type,
+            "color"=>$this->color,
+            "quantity"=>$this->quantity
+        ];
+    }
 }
