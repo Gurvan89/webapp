@@ -64,6 +64,43 @@
 			"response": []
 		},
 		{
+			"name": "insertEquipment",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"type\": \"wool\",\n  \"quanriry\": \"150g\",\n  \"color\": \"red\",\n  \"projectId\": 1\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/equipment/edit",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"equipment",
+						"edit"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "removeProject",
 			"protocolProfileBehavior": {
 				"disableBodyPruning": true
@@ -88,7 +125,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8080/api/project/remove?id=1",
+					"raw": "http://localhost:8080/api/project/remove/13",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -97,13 +134,70 @@
 					"path": [
 						"api",
 						"project",
-						"remove"
-					],
-					"query": [
-						{
-							"key": "id",
-							"value": "1"
+						"remove",
+						"13"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "removeEquipment",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n        \"id\":7,\n        \"name\": \"testWithoutId24\",\n        \"type\": \"SEWING\",\n        \"estimatedDuration\": 1,\n        \"equipments\": {},\n        \"description\": \"testD\"\n    }",
+					"options": {
+						"raw": {
+							"language": "json"
 						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/equipment/remove/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"equipment",
+						"remove",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getAllEquipments",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/equipment/all",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"equipment",
+						"all"
 					]
 				}
 			},
