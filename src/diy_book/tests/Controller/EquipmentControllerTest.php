@@ -7,14 +7,14 @@ use App\Entity\Project;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Liip\TestFixturesBundle\Test\FixturesTrait;
 
-class ProjectControllerTest extends WebTestCase
+class EquipmentControllerTest extends WebTestCase
 {
     use FixturesTrait;
 
     /**
      * Prefix url
      */
-    const BASE_URL="/api/project/%s";
+    const BASE_URL="/api/equipment/%s";
 
     protected function setUp()
     {
@@ -40,10 +40,10 @@ class ProjectControllerTest extends WebTestCase
     function testCreate()
     {
         $dataTest = [
-            "name" => "testName3",
-            "description" => "testDescription",
-            "estimatedDuration" => 1,
-            "type" => "SEWING"
+            "type" => "wool",
+            "quantity" => "100g",
+            "color" => "black",
+            "projectId" => 1
         ];
         $client = static::createClient();
         $client->request('POST',
@@ -61,10 +61,10 @@ class ProjectControllerTest extends WebTestCase
     {
         $dataTest = [
             "id"=>1,
-            "name" => "testName3",
-            "description" => "testDescription",
-            "estimatedDuration" => 1,
-            "type" => "SEWING"
+            "type" => "wool",
+            "quantity" => "100g",
+            "color" => "black",
+            "projectId" => 1
         ];
         $client = static::createClient();
         $client->request('POST',
@@ -76,15 +76,15 @@ class ProjectControllerTest extends WebTestCase
     }
 
     /**
-     * Insert new project with bad estimated duration
+     * Insert new equipment with bad quantity
      */
-    function testCreateBadEstimatedDuration()
+    function testCreateBadQuantity()
     {
         $dataTest = [
-            "name" => "testName",
-            "description" => "testDescription",
-            "estimatedDuration" => "testEstimatedDuration",
-            "type" => "SEWING"
+            "type" => "wool",
+            "quantity" => 100,
+            "color" => "black",
+            "projectId" => 1
         ];
         $client = static::createClient();
         $client->request('POST',
@@ -92,19 +92,19 @@ class ProjectControllerTest extends WebTestCase
             [], [],
             ['CONTENT_TYPE' => 'application/json'], json_encode($dataTest));
         $this->assertEquals(400, $client->getResponse()->getStatusCode());
-        $this->assertStringContainsString('Json bad format. Estimated duration has to be an integer', $client->getResponse()->getContent());
+        $this->assertStringContainsString('Fields bad format', $client->getResponse()->getContent());
     }
 
     /**
-     * Insert new project with bad type
+     * Insert new equipment with bad type
      */
     function testCreateBadType()
     {
         $dataTest = [
-            "name" => "testName",
-            "description" => "testDescription",
-            "estimatedDuration" => 100,
-            "type" => "badType"
+            "type" => 1,
+            "quantity" => "100",
+            "color" => "black",
+            "projectId" => 1
         ];
         $client = static::createClient();
         $client->request('POST',
@@ -112,31 +112,26 @@ class ProjectControllerTest extends WebTestCase
             [], [],
             ['CONTENT_TYPE' => 'application/json'], json_encode($dataTest));
         $this->assertEquals(400, $client->getResponse()->getStatusCode());
-        $this->assertStringContainsString(sprintf("Json bad format. Type authorized: %s", join(",", Project::AUTHORIZED_TYPES)), $client->getResponse()->getContent());
+        $this->assertStringContainsString("Fields bad format", $client->getResponse()->getContent());
     }
 
     /**
-     * Insert new project with bad type
+     * Insert new equipment without project
      */
-    function testCreateInsertExistingName()
+    function testCreateWithoutProject()
     {
         $dataTest = [
-            "name" => "testName",
-            "description" => "testDescription",
-            "estimatedDuration" => 100,
-            "type" => "SEWING"
+            "type" => 1,
+            "quantity" => "100",
+            "color" => "black"
         ];
         $client = static::createClient();
         $client->request('POST',
             sprintf(self::BASE_URL,'edit'),
             [], [],
             ['CONTENT_TYPE' => 'application/json'], json_encode($dataTest));
-        $client->request('POST',
-            '/api/project/edit',
-            [], [],
-            ['CONTENT_TYPE' => 'application/json'], json_encode($dataTest));
         $this->assertEquals(400, $client->getResponse()->getStatusCode());
-        $this->assertStringContainsString("Name already exists in database", $client->getResponse()->getContent());
+        $this->assertStringContainsString("Json bad format", $client->getResponse()->getContent());
     }
 
     /**

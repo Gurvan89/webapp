@@ -2,6 +2,9 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\PersistentCollection;
@@ -51,10 +54,10 @@ class Project extends AbstractEntity
     private string $type;
 
     /**
-     * @ORM\OneToMany(targetEntity="Equipment", mappedBy="project")
-     * @var PersistentCollection
+     * @ORM\OneToMany(targetEntity="Equipment", mappedBy="project", cascade={"persist"})
+     * @var PersistentCollection | ArrayCollection
      */
-    private PersistentCollection $equipments;
+    private $equipments;
 
     /**
      * AbstractProject constructor.
@@ -62,6 +65,7 @@ class Project extends AbstractEntity
      */
     public function __construct()
     {
+        $this->equipments = new ArrayCollection([]);
         parent::__construct();
     }
 
@@ -69,7 +73,8 @@ class Project extends AbstractEntity
      * add new equipment
      * @param Equipment $equipment
      */
-    public function addEquipment(Equipment $equipment){
+    public function addEquipment(Equipment $equipment)
+    {
         $equipment->setProject($this);
         $this->equipments->add($equipment);
     }
@@ -135,7 +140,7 @@ class Project extends AbstractEntity
      */
     public function setType(string $type): void
     {
-        $type=strtoupper($type);
+        $type = strtoupper($type);
         if (in_array($type, self::AUTHORIZED_TYPES))
             $this->type = $type;
     }
@@ -162,12 +167,12 @@ class Project extends AbstractEntity
     public function jsonSerialize()
     {
         return [
-            "id"=>$this->id,
-            "name"=>$this->name,
-            "type"=>$this->type,
-            "estimatedDuration"=>$this->estimatedDuration,
-            "equipments"=>$this->equipments->toArray(),
-            "description"=>$this->description
+            "id" => $this->id,
+            "name" => $this->name,
+            "type" => $this->type,
+            "estimatedDuration" => $this->estimatedDuration,
+            "equipments" => $this->equipments->toArray(),
+            "description" => $this->description
         ];
     }
 }

@@ -31,8 +31,8 @@ class Equipment extends AbstractEntity
     private string $color;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Project", inversedBy="equipments",cascade={"persist"})
-     * @JoinColumn(name="project_id", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="Project", inversedBy="equipments", cascade={"persist"})
+     * @JoinColumn(name="project_id", referencedColumnName="id", onDelete="CASCADE")
      * @var Project
      */
     private Project $project;
